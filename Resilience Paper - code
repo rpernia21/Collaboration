@@ -1,0 +1,55 @@
+# Regression analysis_Resilience_May 22
+
+setwd("C:/Users/User/Desktop/SPSS files")
+
+library(haven)
+res7 <- read_sav("4_Resilience, Optimism, Emotion Dysregulation_March 7 (with new items) copy.sav")
+
+names(res7)
+
+
+#life orientation scale model
+summary(mod1 <-lm(resilience_overall~LOTR_overall, data= res7))
+summary(mod2 <-lm(resilience_overall~optimism_factor1+pessimism_factor2, data= res7))
+
+#Emotion dysregulation scale model
+summary(mod3 <-lm(resilience_overall~EmotionDysregulation_overall, data= res7))
+summary(mod4 <-lm(resilience_overall~NoControl_EmotionDysregulation+NoAcceptance_EmotionDysregulation+
+                   NoAwareness_EmotionDysregulation+NoClarity_EmotionDysregulation, data= res7))
+
+#only covariates model
+#summary(mod5 <-lm(resilience_overall~Age+Sex+continent+LevelofEducation_r+
+  #                 yearsofstayinTaiwan_r+similaritytoTaiwan_r+Chineselevel_r+
+  #                 Englishlevel_r, data= res7))
+
+#with covariates models
+summary(mod5 <-lm(resilience_overall~optimism_factor1+pessimism_factor2+Age+Sex+continent+LevelofEducation_r+
+                   yearsofstayinTaiwan_r+similaritytoTaiwan_r+Chineselevel_r+
+                   Englishlevel_r, data= res7))
+
+
+summary(mod6 <-lm(resilience_overall~EmotionDysregulation_overall+
+                   Age+Sex+continent+LevelofEducation_r+
+                   yearsofstayinTaiwan_r+similaritytoTaiwan_r+Chineselevel_r+
+                   Englishlevel_r, data= res7))
+
+summary(mod7 <-lm(resilience_overall~optimism_factor1+pessimism_factor2+EmotionDysregulation_overall+
+                   Age+Sex+continent+LevelofEducation_r+
+                   yearsofstayinTaiwan_r+similaritytoTaiwan_r+Chineselevel_r+
+                   Englishlevel_r, data= res7))
+
+#interaction
+summary(mod7 <-lm(resilience_overall~optimism_factor1+pessimism_factor2*yearsofstayinTaiwan_r+EmotionDysregulation_overall*yearsofstayinTaiwan_r+
+                   Age+Sex+continent+LevelofEducation_r+
+                  similaritytoTaiwan_r+Chineselevel_r+
+                   Englishlevel_r, data= res7))
+
+names(res7)
+
+library(stargazer)
+
+stargazer(mod1, mod2, mod3, mod4,
+          mod5, mod6, mod7, type="html", 
+          title = "Table 1. Regression Analysis of Student's Resilience",
+          out = "Table1. Resilience_May 22.htm", 
+          omit.stat=c("LL","ser","f", "adj.rsq"), no.space=TRUE)
